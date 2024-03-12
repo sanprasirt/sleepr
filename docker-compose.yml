@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  reservations:
+    image: reservation
+    build:
+      context: .
+      dockerfile: ./apps/reservations/Dockerfile
+      target: dev
+    command: npm run start:dev reservations
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/reservation
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+volumes:
+  dbdata6:
