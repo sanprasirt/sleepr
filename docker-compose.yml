@@ -17,6 +17,23 @@ services:
       - MONGODB_URI=mongodb://mongodb:27017/sleepr
     depends_on:
       - mongodb
+  payments:
+    image: payment
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: dev
+    command: npm run start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/sleepr
+    depends_on:
+      - mongodb
   auth:
     image: auth
     build:
