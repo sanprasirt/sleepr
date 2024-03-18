@@ -7,6 +7,7 @@ import { LoggerModule } from '@app/common';
 
 @Module({
   imports: [
+    // นำ ConfigModule มาใช้ใน PaymentsModule
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -14,6 +15,7 @@ import { LoggerModule } from '@app/common';
         STRIPE_SECRET_KEY: Joi.string().required(),
       })
     }),
+    // นำ LoggerModule from common lib มาใช้ใน PaymentsModule
     LoggerModule,
   ],
   controllers: [PaymentsController],
