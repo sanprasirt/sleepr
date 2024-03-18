@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { CreateChargeDto } from '@app/common';
+import { never } from 'rxjs';
 
 @Injectable()
 export class PaymentsService {
@@ -18,7 +19,7 @@ export class PaymentsService {
   
   // สร้าง method ชื่อ createCharge ที่รับค่าจาก createChargeDto และส่งค่าไปยัง stripe.paymentIntents.create
   // โดยใช้ await เพื่อรอให้ stripe.paymentIntents.create ทำงานเสร็จก่อนแล้วค่อย return ค่าออกไป
-  async createCharge(createChargeDto: CreateChargeDto) {
+  async createCharge({ amount }: CreateChargeDto) {
     // สร้าง paymentMethod โดยใช้ stripe.paymentMethods.create และส่งค่า createChargeDto.card ไปด้วย
     const paymentMethod = await this.stripe.paymentMethods.create({
       type: 'card',
@@ -27,10 +28,11 @@ export class PaymentsService {
     // สร้าง paymentIntent โดยใช้ stripe.paymentIntents.create และส่งค่า paymentMethod.id, createChargeDto.amount, 'thb', true, ['card'] ไปด้วย
     const paymentIntent = await this.stripe.paymentIntents.create({
       payment_method: paymentMethod.id,
-      amount: createChargeDto.amount * 100,
+      amount: amount * 100,
       currency: 'thb',
       confirm: true,
       payment_method_types: ['card'],
+      // payment_method: 'pm_card_visa',
     });
     return paymentIntent;
   }

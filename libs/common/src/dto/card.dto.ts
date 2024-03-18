@@ -13,7 +13,4 @@ export class CardDto {
 
     @IsCreditCard()
     number: string;
-
-    @IsString()
-    token: string;
 }
