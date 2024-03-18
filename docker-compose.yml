@@ -32,6 +32,21 @@ services:
       - MONGODB_URI=mongodb://mongodb:27017/sleepr
     depends_on:
       - mongodb
+  notifications:
+    image: notification
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: dev
+    command: npm run start:dev notifications
+    env_file:
+      - ./apps/notifications/.env
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/sleepr
+    depends_on:
+      - mongodb
   auth:
     image: auth
     build:
